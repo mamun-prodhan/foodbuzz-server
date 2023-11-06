@@ -30,6 +30,21 @@ async function run() {
     // my database collections
     const blogsCollection = client.db("assignment-11").collection("blogs");
     // -----------------api end points here -----------------
+    // get latest blogs
+    app.get("/blogs", async (req, res) => {
+      try {
+        const result = await blogsCollection
+          .find()
+          .sort({ createdAt: -1 })
+          .limit(3)
+          .toArray();
+        console.log(result);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+        // res.send(error);
+      }
+    });
     // post blogs
     app.post("/blogs", async (req, res) => {
       try {
