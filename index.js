@@ -29,6 +29,9 @@ async function run() {
     await client.connect();
     // my database collections
     const blogsCollection = client.db("assignment-11").collection("blogs");
+    const wishlistCollection = client
+      .db("assignment-11")
+      .collection("wishlist");
     // -----------------api end points here -----------------
     // get latest blogs
     app.get("/blogs", async (req, res) => {
@@ -51,6 +54,19 @@ async function run() {
         const blogsData = req.body;
         console.log(blogsData);
         const result = await blogsCollection.insertOne(blogsData);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+        res.send(error);
+      }
+    });
+
+    // post wishlist data
+    app.post("/wishlist", async (req, res) => {
+      try {
+        const wishlistData = req.body;
+        console.log(wishlistData);
+        const result = await wishlistCollection.insertOne(wishlistData);
         res.send(result);
       } catch (error) {
         console.log(error);
