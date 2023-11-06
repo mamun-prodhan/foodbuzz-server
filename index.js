@@ -33,13 +33,26 @@ async function run() {
       .db("assignment-11")
       .collection("wishlist");
     // -----------------api end points here -----------------
+    // get all blogs
+    app.get("/allblogs", async (req, res) => {
+      try {
+        const result = await blogsCollection
+          .find()
+          .sort({ createdAt: -1 })
+          .toArray();
+        console.log(result);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+      }
+    });
     // get latest blogs
     app.get("/blogs", async (req, res) => {
       try {
         const result = await blogsCollection
           .find()
           .sort({ createdAt: -1 })
-          .limit(3)
+          .limit(6)
           .toArray();
         console.log(result);
         res.send(result);
