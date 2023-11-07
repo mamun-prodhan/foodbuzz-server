@@ -81,10 +81,21 @@ async function run() {
     app.get("/allblogs/:id", async (req, res) => {
       try {
         const id = req.params.id;
-        console.log(id);
+        // console.log(id);
         const query = { _id: new ObjectId(id) };
         const result = await blogsCollection.findOne(query);
-        console.log(result);
+        // console.log(result);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    // get comments based on blog_id
+    app.get("/comments/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { blog_id: id };
+        const result = await commentsCollection.find(query).toArray();
         res.send(result);
       } catch (error) {
         console.log(error);
@@ -113,6 +124,7 @@ async function run() {
         console.log(error);
       }
     });
+
     // post wishlist data
     app.post("/wishlist", async (req, res) => {
       try {
