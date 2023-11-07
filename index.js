@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,7 +12,7 @@ app.use(express.json());
 // mongodb
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ivnezkj.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
+// console.log(uri);
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -29,6 +29,9 @@ async function run() {
     await client.connect();
     // my database collections
     const blogsCollection = client.db("assignment-11").collection("blogs");
+    const commentsCollection = client
+      .db("assignment-11")
+      .collection("comments");
     const wishlistCollection = client
       .db("assignment-11")
       .collection("wishlist");
@@ -42,7 +45,7 @@ async function run() {
             .find()
             .sort({ createdAt: -1 })
             .toArray();
-          console.log(result);
+          //   console.log(result);
           res.send(result);
         } else {
           const query = {
@@ -52,7 +55,7 @@ async function run() {
             .find(query)
             .sort({ createdAt: -1 })
             .toArray();
-          console.log(result);
+          //   console.log(result);
           res.send(result);
         }
       } catch (error) {
@@ -67,18 +70,31 @@ async function run() {
           .sort({ createdAt: -1 })
           .limit(6)
           .toArray();
-        console.log(result);
+        // console.log(result);
         res.send(result);
       } catch (error) {
         console.log(error);
         // res.send(error);
       }
     });
+    // get blog details
+    app.get("/allblogs/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        console.log(id);
+        const query = { _id: new ObjectId(id) };
+        const result = await blogsCollection.findOne(query);
+        console.log(result);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+      }
+    });
     // post blogs
     app.post("/blogs", async (req, res) => {
       try {
         const blogsData = req.body;
-        console.log(blogsData);
+        // console.log(blogsData);
         const result = await blogsCollection.insertOne(blogsData);
         res.send(result);
       } catch (error) {
@@ -86,12 +102,22 @@ async function run() {
         res.send(error);
       }
     });
-
+    // post comments
+    app.post("/comments", async (req, res) => {
+      try {
+        const commentsData = req.body;
+        // console.log("comments data", data);
+        const result = await commentsCollection.insertOne(commentsData);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+      }
+    });
     // post wishlist data
     app.post("/wishlist", async (req, res) => {
       try {
         const wishlistData = req.body;
-        console.log(wishlistData);
+        // console.log(wishlistData);
         const result = await wishlistCollection.insertOne(wishlistData);
         res.send(result);
       } catch (error) {
