@@ -101,6 +101,23 @@ async function run() {
         console.log(error);
       }
     });
+    // put/update the blogs data
+    app.put("/updatedblogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedBlogData = req.body;
+      //   const filter = { _id: new ObjectId(id) };
+      //   const options = { upsert: true };
+      try {
+        const result = await blogsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updatedBlogData },
+          { upsert: true }
+        );
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+      }
+    });
     // post blogs
     app.post("/blogs", async (req, res) => {
       try {
