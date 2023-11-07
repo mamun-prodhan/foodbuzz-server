@@ -34,14 +34,27 @@ async function run() {
       .collection("wishlist");
     // -----------------api end points here -----------------
     // get all blogs
-    app.get("/allblogs", async (req, res) => {
+    app.post("/allblogs", async (req, res) => {
       try {
-        const result = await blogsCollection
-          .find()
-          .sort({ createdAt: -1 })
-          .toArray();
-        console.log(result);
-        res.send(result);
+        const data = req.body;
+        if (data.selectedCategory === "all") {
+          const result = await blogsCollection
+            .find()
+            .sort({ createdAt: -1 })
+            .toArray();
+          console.log(result);
+          res.send(result);
+        } else {
+          const query = {
+            category: data.selectedCategory,
+          };
+          const result = await blogsCollection
+            .find(query)
+            .sort({ createdAt: -1 })
+            .toArray();
+          console.log(result);
+          res.send(result);
+        }
       } catch (error) {
         console.log(error);
       }
