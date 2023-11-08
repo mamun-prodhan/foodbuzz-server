@@ -90,10 +90,10 @@ async function run() {
     app.get("/allblogs/:id", async (req, res) => {
       try {
         const id = req.params.id;
-        // console.log(id);
+        console.log("all blogs", id);
         const query = { _id: new ObjectId(id) };
         const result = await blogsCollection.findOne(query);
-        // console.log(result);
+        console.log("all blogs", result);
         res.send(result);
       } catch (error) {
         console.log(error);
@@ -145,6 +145,28 @@ async function run() {
         const commentsData = req.body;
         // console.log("comments data", data);
         const result = await commentsCollection.insertOne(commentsData);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    // get wishlist data based on email
+    app.get("/wishlist", async (req, res) => {
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await wishlistCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // delete wishlist
+    app.delete("/wishlist/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await wishlistCollection.deleteOne(query);
         res.send(result);
       } catch (error) {
         console.log(error);
