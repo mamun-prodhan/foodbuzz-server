@@ -63,14 +63,14 @@ async function run() {
       }
     });
     // get all blogs for featured blogs
-    app.get("/featuredblogs", async (req, res) => {
-      try {
-        const result = await blogsCollection.find().toArray();
-        res.send(result);
-      } catch (error) {
-        console.log(error);
-      }
-    });
+    // app.get("/featuredblogs", async (req, res) => {
+    //   try {
+    //     const result = await blogsCollection.find().toArray();
+    //     res.send(result);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // });
     // get latest blogs
     app.get("/blogs", async (req, res) => {
       try {
