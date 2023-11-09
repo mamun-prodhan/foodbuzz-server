@@ -37,7 +37,11 @@ const logger = (req, res, next) => {
   next();
 };
 
-const verifyToken = (req, res, next) => {};
+const verifyToken = (req, res, next) => {
+  const token = req?.cookies?.token;
+  console.log("token in middleware", token);
+  next();
+};
 
 async function run() {
   try {
@@ -190,9 +194,9 @@ async function run() {
       }
     });
     // get wishlist data based on email
-    app.get("/wishlist", logger, async (req, res) => {
+    app.get("/wishlist", logger, verifyToken, async (req, res) => {
       console.log(req.query.email);
-      console.log("cookies cookies cookies", req.cookies);
+      // console.log("cookies cookies cookies", req.cookies);
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
