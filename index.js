@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
@@ -14,6 +15,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 // mongodb
 
@@ -56,6 +58,12 @@ async function run() {
           sameSite: "none",
         })
         .send({ success: true });
+    });
+    // clear cookie
+    app.post("/logout", async (req, res) => {
+      const user = req.body;
+      console.log("logging out", user);
+      res.clearCookie("token", { maxAge: 0 }).send({ success: true });
     });
 
     // -------blogs related api---------
@@ -176,6 +184,7 @@ async function run() {
     // get wishlist data based on email
     app.get("/wishlist", async (req, res) => {
       console.log(req.query.email);
+      console.log("cookies cookies cookies", req.cookies);
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
