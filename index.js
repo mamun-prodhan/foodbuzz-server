@@ -31,6 +31,14 @@ const client = new MongoClient(uri, {
   },
 });
 
+//my custom middlewares
+const logger = (req, res, next) => {
+  console.log("log: info", req.method, req.url);
+  next();
+};
+
+const verifyToken = (req, res, next) => {};
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -45,7 +53,7 @@ async function run() {
       .collection("wishlist");
     // -----------------api end points here -----------------
     // -------auth related api----------
-    app.post("/jwt", async (req, res) => {
+    app.post("/jwt", logger, async (req, res) => {
       const user = req.body;
       console.log("user for token", user);
       const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -182,7 +190,7 @@ async function run() {
       }
     });
     // get wishlist data based on email
-    app.get("/wishlist", async (req, res) => {
+    app.get("/wishlist", logger, async (req, res) => {
       console.log(req.query.email);
       console.log("cookies cookies cookies", req.cookies);
       let query = {};
