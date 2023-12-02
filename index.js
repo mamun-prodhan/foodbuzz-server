@@ -37,7 +37,7 @@ const client = new MongoClient(uri, {
 
 //my custom middlewares
 const logger = (req, res, next) => {
-  console.log("log: info", req.method, req.url);
+  // console.log("log: info", req.method, req.url);
   next();
 };
 
@@ -60,7 +60,7 @@ const verifyToken = (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // my database collections
     const blogsCollection = client.db("assignment-11").collection("blogs");
     const commentsCollection = client
@@ -73,7 +73,7 @@ async function run() {
     // -------auth related api----------
     app.post("/jwt", logger, async (req, res) => {
       const user = req.body;
-      console.log("user for token", user);
+      // console.log("user for token", user);
       const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1h",
       });
@@ -90,7 +90,7 @@ async function run() {
     // clear cookie
     app.post("/logout", async (req, res) => {
       const user = req.body;
-      console.log("logging out", user);
+      // console.log("logging out", user);
       res
         .clearCookie("token", {
           maxAge: 0,
@@ -155,10 +155,10 @@ async function run() {
     app.get("/allblogs/:id", async (req, res) => {
       try {
         const id = req.params.id;
-        console.log("all blogs", id);
+        // console.log("all blogs", id);
         const query = { _id: new ObjectId(id) };
         const result = await blogsCollection.findOne(query);
-        console.log("all blogs", result);
+        // console.log("all blogs", result);
         res.send(result);
       } catch (error) {
         console.log(error);
@@ -217,8 +217,8 @@ async function run() {
     });
     // get wishlist data based on email
     app.get("/wishlist", logger, verifyToken, async (req, res) => {
-      console.log(req.query.email);
-      console.log("token owner", req.user);
+      // console.log(req.query.email);
+      // console.log("token owner", req.user);
       if (req.user.email !== req.query.email) {
         return res.status(403).send({ message: "forbidden access" });
       }
@@ -256,10 +256,10 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    // ("Pinged your deployment. You successfully connected to MongoDB!");
+    // );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
